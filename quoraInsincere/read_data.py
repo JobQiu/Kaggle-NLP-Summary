@@ -32,7 +32,7 @@ class DataSet:
         self.preprocess("train")
         self.preprocess("test")
 
-        self.embedding_index = None
+        self.embedding_index = load_embedding(self.embedding_type)
 
         pass
 
@@ -53,22 +53,21 @@ class DataSet:
             df = self.train_df
         else:
             df = self.test_df
-        logging.getLogger().info("Pre-processing {}".format(data_set))
+        print("Pre-processing {}".format(data_set))
 
         if "google" in self.embedding_type:
-            logging.getLogger().info("Clean number ing ... ")
+            print("Clean number ing ... ")
             df["question_text"] = df["question_text"].progress_apply(lambda x: deal_with_numbers(x))
 
         if "glove" not in self.embedding_type:
-            logging.getLogger().info("Clean punct ing ... ")
+            print("Clean punct ing ... ")
             df['question_text'] = df['question_text'].progress_apply(lambda x: deal_with_punct(x))
             pass
         vocab = count(df['question_text'])
 
-        logging.getLogger().info("Loading embedding - {}".format(self.embedding_type))
-        self.embedding_index = load_embedding(self.embedding_type)
-        logging.getLogger().info("Calculating coverage ... ")
+        print("Loading embedding - {}".format(self.embedding_type))
+        print("Calculating coverage ... ")
         oov = check_coverage(vocab, self.embedding_index)
-        logging.getLogger().info(oov[:20])
+        print(oov[:20])
 
-        logging.getLogger().info("-" * 20)
+        print("-" * 20)
