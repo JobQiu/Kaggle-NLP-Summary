@@ -3,5 +3,8 @@
   "embedding_dir": "/content/data/",
   "output_dir": "/content/out/",
   "project_dir": "/content/Kaggle-NLP-Summary/",
-  "google_news_path": "/content/data/GoogleNews-vectors-negative300/GoogleNews-vectors-negative300.bin"
+  "google_news_path": "/content/data/GoogleNews-vectors-negative300/GoogleNews-vectors-negative300.bin",
+  "glove_path": "/content/data/glove.840B.300d/glove.840B.300d.txt",
+  "wiki_news_path": "/content/data/wiki-news-300d-1M/wiki-news-300d-1M.vec",
+  "paragram_path": "/content/data/paragram_300_sl999/paragram_300_sl999.txt"
 }

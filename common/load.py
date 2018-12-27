@@ -9,7 +9,6 @@ from gensim.models import KeyedVectors
 from common.util import load_config
 import os
 
-
 def load_embedding(type):
     """
 

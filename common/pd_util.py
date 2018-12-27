@@ -9,9 +9,36 @@ from collections import Counter
 import pandas as pd
 from tqdm import tqdm
 import gc
+import operator
 
 tqdm.pandas()
 
+
+def check_coverage(vocab, embeddings_index):
+    """
+
+    :param vocab: the output Counter from the count method
+    :param embeddings_index: embedding loaded from files
+    :return: those words:their count that not find in word-embedding
+    """
+    a = []
+    oov = {}
+    find_amount = 0
+    not_find_amount = 0
+    for word in tqdm(vocab):
+        if word in embeddings_index:
+            a.append(word)
+            find_amount += vocab[word]
+        else:
+            oov[word] = vocab[word]
+            not_find_amount += vocab[word]
+            pass
+
+    print('Found embeddings for {:.2%} of vocab     [kinds]'.format(len(a) / len(vocab)))
+    print('Found embeddings for  {:.2%} of all text [amount]'.format(find_amount / (find_amount + not_find_amount)))
+    sorted_x = sorted(oov.items(), key=operator.itemgetter(1))[::-1]
+
+    return sorted_x
 
 def count(pd_series, verbose=True):
     """
@@ -31,3 +58,4 @@ def count(pd_series, verbose=True):
     del sentences
     gc.collect()
     return vocab
+
