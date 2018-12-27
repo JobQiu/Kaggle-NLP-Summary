@@ -1,0 +1,6 @@
+{
+  "data_dir": "/content/data/",
+  "embedding_dir": "/content/data/",
+  "output_dir":"/content/out/",
+  "project_dir":"/content/Kaggle-NLP-Summary/"
+}

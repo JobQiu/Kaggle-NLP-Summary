@@ -12,3 +12,8 @@ chmod 600 /root/.kaggle/kaggle.json
 #
 
 kaggle competitions download -c quora-insincere-questions-classification -p /content/data
+
+unzip /content/data/train.csv.zip -d /content/data
+unzip /content/data/test.csv.zip -d /content/data
+unzip /content/data/sample_submission.csv.zip -d /content/data
+unzip /content/data/embeddings.zip -d /content/data
