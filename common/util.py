@@ -22,6 +22,7 @@ def load_config():
         config = json.load(f)
     print(config)
     f.close()
+    return config
 
 
 def send_msg(msg="...",

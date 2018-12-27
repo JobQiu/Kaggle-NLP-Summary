@@ -9,6 +9,7 @@ from gensim.models import KeyedVectors
 from common.util import load_config
 import os
 
+
 def load_embedding(type):
     """
 
@@ -16,20 +17,18 @@ def load_embedding(type):
     :return:
     """
     config = load_config()
-    print(config)
+    # print(config)
 
     # load json to know where are the embedding files
 
     if "google" in type or "Google" in type:
-        pass
+        return load_google_news(config['google_news_path'])
     elif "glove" in type or "GloVe" in type:
         pass
     elif "fasttext" in type:
         pass
     else:
         raise Exception("Please choose a word embedding, google news/glove/fasttext")
-
-    pass
 
 
 def load_google_news(path='/content/data/GoogleNews-vectors-negative300/GoogleNews-vectors-negative300.bin'):
