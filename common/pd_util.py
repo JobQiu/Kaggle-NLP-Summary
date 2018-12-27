@@ -37,13 +37,16 @@ def check_coverage(vocab, embeddings_index):
     print('Found embeddings for {:.2%} of vocab     [kinds]'.format(len(a) / len(vocab)))
     print('Found embeddings for  {:.2%} of all text [amount]'.format(find_amount / (find_amount + not_find_amount)))
     sorted_x = sorted(oov.items(), key=operator.itemgetter(1))[::-1]
+    del a
+    gc.collect()
 
     return sorted_x
+
 
 def count(pd_series, verbose=True):
     """
     for example, vocab = count(train["question_text"])
-
+c
     :param pd_series:
     :param verbose:
     :return: Counter of words in this pandas series
@@ -58,4 +61,3 @@ def count(pd_series, verbose=True):
     del sentences
     gc.collect()
     return vocab
-

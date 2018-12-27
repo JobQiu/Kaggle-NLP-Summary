@@ -24,3 +24,6 @@ class DataSet():
 
     def getTest(self):
         return self.test_df
+
+    def preprocess(self):
+        pass
