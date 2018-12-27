@@ -11,9 +11,20 @@ wget https://raw.githubusercontent.com/JobQiu/EloMerchantKaggle/master/data/kagg
 chmod 600 /root/.kaggle/kaggle.json
 #
 
-kaggle competitions download -c quora-insincere-questions-classification -p /content/data
+if [ -e /content/data/embeddings.zip ]
+then
+    echo "files have been downloaded"
+else
+    kaggle competitions download -c quora-insincere-questions-classification -p /content/data
+fi
 
-unzip /content/data/train.csv.zip -d /content/data
-unzip /content/data/test.csv.zip -d /content/data
-unzip /content/data/sample_submission.csv.zip -d /content/data
-unzip /content/data/embeddings.zip -d /content/data
+
+if [ -e /content/data/sample_submission.csv ]
+then
+    echo "files have been extracted"
+else
+    unzip /content/data/train.csv.zip -d /content/data
+    unzip /content/data/test.csv.zip -d /content/data
+    unzip /content/data/sample_submission.csv.zip -d /content/data
+    unzip /content/data/embeddings.zip -d /content/data
+fi

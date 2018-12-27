@@ -1,6 +1,7 @@
 {
   "data_dir": "/content/data/",
   "embedding_dir": "/content/data/",
-  "output_dir":"/content/out/",
-  "project_dir":"/content/Kaggle-NLP-Summary/"
+  "output_dir": "/content/out/",
+  "project_dir": "/content/Kaggle-NLP-Summary/",
+  "google_news_path": "/content/data/GoogleNews-vectors-negative300/GoogleNews-vectors-negative300.bin"
 }
