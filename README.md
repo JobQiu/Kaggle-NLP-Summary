@@ -15,3 +15,11 @@ https://colab.research.google.com/drive/1qoyVgAZyUYUX0b7PHy-XXN8wp2UM6TRl
 
 The task is `given a question, classify it as insincere or sincere.`
 In the train data_set, only 6.187% are insincere. `What should we do with this?`
+
+## some difference between different word embeddings
+
+### 1. GoogleNews
+
+https://code.google.com/archive/p/word2vec/
+
+### 2. GloVe

@@ -5,14 +5,10 @@ Created on Thu Dec 27 00:52:19 2018
 
 @author: xavier.qiu
 """
-import pandas as pd
-from common.util import load_config
-from common.preprocess import *
-from common.pd_util import *
+
 from common.load import *
-import os
-from tqdm import tqdm
-import logging
+from common.pd_util import *
+from common.preprocess import *
 
 tqdm.pandas()
 
