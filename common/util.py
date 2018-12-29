@@ -24,6 +24,7 @@ def load_config():
 
     with open(os.path.join(json_path, "config.json")) as f:
         config = json.load(f)
+    print("Config - :")
     print(config)
     f.close()
     return config

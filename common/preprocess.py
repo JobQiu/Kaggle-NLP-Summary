@@ -9,14 +9,21 @@ https://www.kaggle.com/christofhenkel/how-to-preprocessing-when-using-embeddings
 
 """
 import re
-
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 
 def clean():
     pass
 
+def getWordIndices(X, len_voc, max_len):
+    t = Tokenizer(num_words=len_voc)
+    t.fit_on_texts(X)
+    X = t.texts_to_sequences(X)
+    X = pad_sequences(X, maxlen=max_len)
+    return X, t.word_index
 
 
-def deal_with_special_characters():
+def deal_with_special_characters(text):
 
     for p in punct_mapping:
         text = text.replace(p, punct_mapping[p])
@@ -28,7 +35,7 @@ def deal_with_special_characters():
         text = text.replace(s, specials[s])
 
     return text
-    
+
 specials = {'\u200b': ' ', '…': ' ... ', '\ufeff': '', 'करना': '', 'है': ''}  # Other special characters that I have to deal with in last
 punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€\×™√²—–&'
 punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ", "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'", '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta', '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '', '³': '3', 'π': 'pi', }
@@ -85,7 +92,9 @@ misspell_mapping = {'colour': 'color', 'centre': 'center', 'favourite': 'favorit
                 'pennis': 'penis', 'Etherium': 'Ethereum', 'narcissit': 'narcissist', 'bigdata': 'big data',
                 '2k17': '2017', '2k18': '2018', 'qouta': 'quota', 'exboyfriend': 'ex boyfriend',
                 'airhostess': 'air hostess', "whst": 'what', 'watsapp': 'whatsapp', 'demonitisation': 'demonetization',
-                'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'pokemon'}
+                'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'Pokemon', 'Pokémon':'Pokemon',
+                'Quorans':'Quora users','cryptocurrencies':'cryptocurrency','Blockchain':'blockchain','fiancé':'fiance','wwwyoutubecom':'youtube',
+                'Cryptocurrency':'cryptocurrency','Quoras':'Quora','Golang':'golang','Whst':'What','coinbase':'Coinbase'}
 
 
 def deal_with_contraction(text):
