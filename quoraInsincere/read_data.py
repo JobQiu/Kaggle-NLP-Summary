@@ -17,8 +17,6 @@ import gc
 import json
 import pickle
 
-tqdm.pandas()
-
 
 class DataSet:
 
