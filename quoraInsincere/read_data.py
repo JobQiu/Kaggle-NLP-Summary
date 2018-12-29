@@ -15,7 +15,7 @@ tqdm.pandas()
 
 class DataSet:
 
-    def __init__(self, embedding='google'):
+    def __init__(self, embedding='glove'):
         """
 
         :param embedding:
@@ -38,7 +38,7 @@ class DataSet:
     def getTest(self):
         return self.test_df
 
-    def preprocess(self, data_set):
+    def preprocess(self, data_set, filters = [ "punct", "contraction", "special characters","misspell"]):
         """
 
         :param data_set:
@@ -50,18 +50,31 @@ class DataSet:
         else:
             df = self.test_df
         print("Pre-processing {}".format(data_set))
+        df["treated_question"] = df["question_text"]
 
-        if "google" in self.embedding_type:
+        if "numbers" in filters:
             print("Clean number ing ... ")
-            df["question_text"] = df["question_text"].progress_apply(lambda x: deal_with_numbers(x))
+            df["treated_question"] = df["treated_question"].progress_apply(lambda x: deal_with_numbers(x))
 
-        if "glove" not in self.embedding_type:
+        if "punct" in filters:
             print("Clean punct ing ... ")
-            df['question_text'] = df['question_text'].progress_apply(lambda x: deal_with_punct(x))
-            pass
+            df['treated_question'] = df['treated_question'].progress_apply(lambda x: deal_with_punct(x))
+
+        if "lower" in filters:
+            print("Lowering ... ")
+            df['treated_question'] = df['treated_question'].progress_apply(lambda x: x.lower())
+
+        if "special characters" in filters:
+            print("Clean special chars ing ... ")
+            df['treated_question'] = df['treated_question'].progress_apply(lambda x: clean_special_chars(x))
+
+        if "misspell" in filters:
+            print("Clean misspell ing ...")
+            df['treated_question'] = df['treated_question'].progress_apply(lambda x: deal_with_misspell(x))
+
+
         vocab = count(df['question_text'])
 
-        print("Loading embedding - {}".format(self.embedding_type))
         print("Calculating coverage ... ")
         oov = check_coverage(vocab, self.embedding_index)
         print(oov[:20])

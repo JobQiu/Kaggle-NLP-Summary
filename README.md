@@ -23,3 +23,5 @@ In the train data_set, only 6.187% are insincere. `What should we do with this?`
 https://code.google.com/archive/p/word2vec/
 
 ### 2. GloVe
+
+Fasttext and GloVe understand capitalization

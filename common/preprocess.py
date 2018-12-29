@@ -16,12 +16,23 @@ def clean():
 
 
 
-def deal_with_contraction():
-    pass
-
-
 def deal_with_special_characters():
-    pass
+
+    for p in punct_mapping:
+        text = text.replace(p, punct_mapping[p])
+
+    for p in punct:
+        text = text.replace(p, f' {p} ')
+
+    for s in specials:
+        text = text.replace(s, specials[s])
+
+    return text
+    
+specials = {'\u200b': ' ', '…': ' ... ', '\ufeff': '', 'करना': '', 'है': ''}  # Other special characters that I have to deal with in last
+punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€\×™√²—–&'
+punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ", "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'", '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta', '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '', '³': '3', 'π': 'pi', }
+
 
 
 def deal_with_punct(x):
@@ -62,30 +73,27 @@ def deal_with_misspell(x):
     def replace(match):
         return mispellings[match.group(0)]
 
-    return mispellings_re.sub(replace, text)
+    return mispellings_re.sub(replace, x)
+
+misspell_mapping = {'colour': 'color', 'centre': 'center', 'favourite': 'favorite', 'travelling': 'traveling',
+                'counselling': 'counseling', 'theatre': 'theater', 'cancelled': 'canceled', 'labour': 'labor',
+                'organisation': 'organization', 'wwii': 'world war 2', 'citicise': 'criticize', 'youtu ': 'youtube ',
+                'Qoura': 'Quora', 'sallary': 'salary', 'Whta': 'What', 'narcisist': 'narcissist', 'howdo': 'how do',
+                'whatare': 'what are', 'howcan': 'how can', 'howmuch': 'how much', 'howmany': 'how many',
+                'whydo': 'why do', 'doI': 'do I', 'theBest': 'the best', 'howdoes': 'how does',
+                'mastrubation': 'masturbation', 'mastrubate': 'masturbate', "mastrubating": 'masturbating',
+                'pennis': 'penis', 'Etherium': 'Ethereum', 'narcissit': 'narcissist', 'bigdata': 'big data',
+                '2k17': '2017', '2k18': '2018', 'qouta': 'quota', 'exboyfriend': 'ex boyfriend',
+                'airhostess': 'air hostess', "whst": 'what', 'watsapp': 'whatsapp', 'demonitisation': 'demonetization',
+                'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'pokemon'}
 
 
-misspell_mapping = {'colour': 'color',
-                    'centre': 'center',
-                    'didnt': 'did not',
-                    'doesnt': 'does not',
-                    'isnt': 'is not',
-                    'shouldnt': 'should not',
-                    'favourite': 'favorite',
-                    'travelling': 'traveling',
-                    'counselling': 'counseling',
-                    'theatre': 'theater',
-                    'cancelled': 'canceled',
-                    'labour': 'labor',
-                    'organisation': 'organization',
-                    'wwii': 'world war 2',
-                    'citicise': 'criticize',
-                    'instagram': 'social medium',
-                    'whatsapp': 'social medium',
-                    'snapchat': 'social medium',
-                    'Snapchat': 'social medium'
-                    }
-
+def deal_with_contraction(text):
+    specials = ["’", "‘", "´", "`"]
+    for s in specials:
+        text = text.replace(s, "'")
+    text = ' '.join([contraction_mapping[t] if t in contraction_mapping else t for t in text.split(" ")])
+    return text
 contraction_mapping = {"ain't": "is not", "aren't": "are not", "can't": "cannot", "'cause": "because",
                        "could've": "could have", "couldn't": "could not", "didn't": "did not", "doesn't": "does not",
                        "don't": "do not", "hadn't": "had not", "hasn't": "has not", "haven't": "have not",
