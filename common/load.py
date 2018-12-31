@@ -11,7 +11,6 @@ import os
 import numpy as np
 
 
-
 def load_embedding(type):
     """
     :param type: google/glove/paragram/wiki=fasttext

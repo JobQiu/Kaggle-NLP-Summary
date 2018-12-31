@@ -12,8 +12,10 @@ import re
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
+
 def clean():
     pass
+
 
 def getWordIndices(X, len_voc, max_len):
     t = Tokenizer(num_words=len_voc)
@@ -24,7 +26,6 @@ def getWordIndices(X, len_voc, max_len):
 
 
 def deal_with_special_characters(text):
-
     for p in punct_mapping:
         text = text.replace(p, punct_mapping[p])
 
@@ -36,10 +37,14 @@ def deal_with_special_characters(text):
 
     return text
 
-specials = {'\u200b': ' ', '…': ' ... ', '\ufeff': '', 'करना': '', 'है': ''}  # Other special characters that I have to deal with in last
-punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€\×™√²—–&'
-punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ", "×": "x", "²": "2", "—": "-", "–": "-", "’": "'", "_": "-", "`": "'", '“': '"', '”': '"', '“': '"', "£": "e", '∞': 'infinity', 'θ': 'theta', '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta', '∅': '', '³': '3', 'π': 'pi', }
 
+specials = {'\u200b': ' ', '…': ' ... ', '\ufeff': '', 'करना': '',
+            'है': ''}  # Other special characters that I have to deal with in last
+punct = "/-'?!.,#$%\'()*+-/:;<=>@[\\]^_`{|}~" + '""“”’' + '∞θ÷α•à−β∅³π‘₹´°£€\×™√²—–&'
+punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™": "tm", "√": " sqrt ", "×": "x", "²": "2",
+                 "—": "-", "–": "-", "’": "'", "_": "-", "`": "'", '“': '"', '”': '"', '“': '"', "£": "e",
+                 '∞': 'infinity', 'θ': 'theta', '÷': '/', 'α': 'alpha', '•': '.', 'à': 'a', '−': '-', 'β': 'beta',
+                 '∅': '', '³': '3', 'π': 'pi', }
 
 
 def deal_with_punct(x):
@@ -72,29 +77,37 @@ def deal_with_misspell(x):
     """
     """
     pass
+
     def _get_mispell(mispell_dict):
         mispell_re = re.compile('(%s)' % '|'.join(mispell_dict.keys()))
         return mispell_dict, mispell_re
 
     mispellings, mispellings_re = _get_mispell(misspell_mapping)
+
     def replace(match):
         return mispellings[match.group(0)]
 
     return mispellings_re.sub(replace, x)
 
+
 misspell_mapping = {'colour': 'color', 'centre': 'center', 'favourite': 'favorite', 'travelling': 'traveling',
-                'counselling': 'counseling', 'theatre': 'theater', 'cancelled': 'canceled', 'labour': 'labor',
-                'organisation': 'organization', 'wwii': 'world war 2', 'citicise': 'criticize', 'youtu ': 'youtube ',
-                'Qoura': 'Quora', 'sallary': 'salary', 'Whta': 'What', 'narcisist': 'narcissist', 'howdo': 'how do',
-                'whatare': 'what are', 'howcan': 'how can', 'howmuch': 'how much', 'howmany': 'how many',
-                'whydo': 'why do', 'doI': 'do I', 'theBest': 'the best', 'howdoes': 'how does',
-                'mastrubation': 'masturbation', 'mastrubate': 'masturbate', "mastrubating": 'masturbating',
-                'pennis': 'penis', 'Etherium': 'Ethereum', 'narcissit': 'narcissist', 'bigdata': 'big data',
-                '2k17': '2017', '2k18': '2018', 'qouta': 'quota', 'exboyfriend': 'ex boyfriend',
-                'airhostess': 'air hostess', "whst": 'what', 'watsapp': 'whatsapp', 'demonitisation': 'demonetization',
-                'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'Pokemon', 'Pokémon':'Pokemon',
-                'Quorans':'Quora users','cryptocurrencies':'cryptocurrency','Blockchain':'blockchain','fiancé':'fiance','wwwyoutubecom':'youtube',
-                'Cryptocurrency':'cryptocurrency','Quoras':'Quora','Golang':'golang','Whst':'What','coinbase':'Coinbase', 'tensorflow':'TensorFlow'}
+                    'counselling': 'counseling', 'theatre': 'theater', 'cancelled': 'canceled', 'labour': 'labor',
+                    'organisation': 'organization', 'wwii': 'world war 2', 'citicise': 'criticize',
+                    'youtu ': 'youtube ',
+                    'Qoura': 'Quora', 'sallary': 'salary', 'Whta': 'What', 'narcisist': 'narcissist', 'howdo': 'how do',
+                    'whatare': 'what are', 'howcan': 'how can', 'howmuch': 'how much', 'howmany': 'how many',
+                    'whydo': 'why do', 'doI': 'do I', 'theBest': 'the best', 'howdoes': 'how does',
+                    'mastrubation': 'masturbation', 'mastrubate': 'masturbate', "mastrubating": 'masturbating',
+                    'pennis': 'penis', 'Etherium': 'Ethereum', 'narcissit': 'narcissist', 'bigdata': 'big data',
+                    '2k17': '2017', '2k18': '2018', 'qouta': 'quota', 'exboyfriend': 'ex boyfriend',
+                    'airhostess': 'air hostess', "whst": 'what', 'watsapp': 'whatsapp',
+                    'demonitisation': 'demonetization',
+                    'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'Pokemon',
+                    'Pokémon': 'Pokemon',
+                    'Quorans': 'Quora users', 'cryptocurrencies': 'cryptocurrency', 'Blockchain': 'blockchain',
+                    'fiancé': 'fiance', 'wwwyoutubecom': 'youtube',
+                    'Cryptocurrency': 'cryptocurrency', 'Quoras': 'Quora', 'Golang': 'golang', 'Whst': 'What',
+                    'coinbase': 'Coinbase', 'tensorflow': 'TensorFlow'}
 
 
 def deal_with_contraction(text):
@@ -103,6 +116,8 @@ def deal_with_contraction(text):
         text = text.replace(s, "'")
     text = ' '.join([contraction_mapping[t] if t in contraction_mapping else t for t in text.split(" ")])
     return text
+
+
 contraction_mapping = {"ain't": "is not", "aren't": "are not", "can't": "cannot", "'cause": "because",
                        "could've": "could have", "couldn't": "could not", "didn't": "did not", "doesn't": "does not",
                        "don't": "do not", "hadn't": "had not", "hasn't": "has not", "haven't": "have not",

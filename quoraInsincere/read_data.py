@@ -14,14 +14,13 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 import gc
-import json
 import pickle
 from tqdm import tqdm
 
 
 class DataSet:
 
-    def __init__(self, embedding='glove', voc_len = 95000, max_ques_len = 60, cache = True ):
+    def __init__(self, embedding='glove', voc_len=105000, max_ques_len=72, cache=True):
         """
 
         :param embedding:
@@ -31,9 +30,7 @@ class DataSet:
         self.voc_len = voc_len
         self.max_ques_len = max_ques_len
 
-
         if cache and os.path.exists(os.path.join(self.config["data_dir"], "y_train.pickle")):
-
             with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'rb') as handle:
                 self.x_train = pickle.load(handle)
             with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'rb') as handle:
@@ -45,7 +42,6 @@ class DataSet:
 
             return
 
-
         print("Loading Train df")
         self.train_df = pd.read_csv(os.path.join(self.config["data_dir"], "train.csv"))
         print("Loading Test df")
@@ -56,19 +52,17 @@ class DataSet:
         self.preprocess("train")
         self.preprocess("test")
 
-
         self.word_index = None
         # convert question_text to question_ids_list
         self.word2indices()
 
-        self.embedding_matrix = self. make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
+        self.embedding_matrix = self.make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
 
         del self.word_index
         del self.embedding_index
         gc.collect()
 
         if cache:
-
             with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'wb') as handle:
                 pickle.dump(self.x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
             with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'wb') as handle:
@@ -78,10 +72,9 @@ class DataSet:
             with open(os.path.join(self.config["data_dir"], "embedding_matrix.pickle"), 'wb') as handle:
                 pickle.dump(self.embedding_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-
     def make_embed_matrix(self, embeddings_index, word_index, len_voc):
         all_embs = np.stack(embeddings_index.values())
-        emb_mean,emb_std = all_embs.mean(), all_embs.std()
+        emb_mean, emb_std = all_embs.mean(), all_embs.std()
         embed_size = all_embs.shape[1]
         word_index = word_index
         embedding_matrix = np.random.normal(emb_mean, emb_std, (len_voc, embed_size))
@@ -97,11 +90,10 @@ class DataSet:
 
     def word2indices(self):
 
-        t = Tokenizer(num_words=self.voc_len,filters='')
+        t = Tokenizer(num_words=self.voc_len, filters='')
 
         x_train = self.train_df["treated_question"].fillna("_na_").values
         x_test = self.test_df["treated_question"].fillna("_na_").values
-
 
         t.fit_on_texts(list(x_train))
 
@@ -118,9 +110,9 @@ class DataSet:
         # Get the target values
         y_train = self.train_df['target'].values
 
-        self.x_train =x_train
-        self.x_test =x_test
-        self.y_train =y_train
+        self.x_train = x_train
+        self.x_test = x_test
+        self.y_train = y_train
 
     def getTrain(self):
         return self.train_df
@@ -131,9 +123,10 @@ class DataSet:
     def getEmbeddingMatrix(self):
         return self.embedding_matrix
 
-    def preprocess(self, data_set, filters = [ "punct", "contraction", "special characters","misspell"]):
+    def preprocess(self, data_set, filters=["punct", "contraction", "special characters", "misspell"]):
         """
 
+        :param filters:
         :param data_set:
         :return:
         """
@@ -164,7 +157,6 @@ class DataSet:
         if "misspell" in filters:
             print("Clean misspell ing ...")
             df['treated_question'] = df['treated_question'].apply(lambda x: deal_with_misspell(x))
-
 
         vocab = count(df['treated_question'])
 
