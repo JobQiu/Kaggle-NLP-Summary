@@ -25,3 +25,12 @@ https://code.google.com/archive/p/word2vec/
 ### 2. GloVe
 
 Fasttext and GloVe understand capitalization
+
+---
+
+
+Dec 29, 2018
+
+## Different models
+
+1. 

@@ -47,3 +47,70 @@ def send_msg(msg="...",
 
     requests.post(dingding_url, headers=headers,
                   data=json.dumps(post_data))
+
+
+def map_list_combination(params_list):
+    """
+
+
+    params = {
+        "objective": ["regression"],
+        "metric": ["rmse"],
+        "num_leaves": [10,30,50],
+        "min_child_weight": [40,50,60],
+        "learning_rate": [0.01,0.03, 0.05, 0.06],
+        "bagging_fraction": [0.6,0.7,0.8],
+        "feature_fraction": [0.6,0.7,0.8],
+        "bagging_frequency": [4,5,6],
+        "bagging_seed": [2018],
+        "verbosity": [-1]
+    }
+    :param map_list:
+    :return:
+
+        for this example, it will return all the combinations
+
+    """
+
+    res = deque([{}])
+    for key in params_list:
+        value_list = params_list[key]
+        l = len(res)
+        for i in range(l):
+            cur_dict = res.popleft()
+            for value in value_list:
+                new_cur_dict = copy.deepcopy(cur_dict)
+                new_cur_dict[key] = value
+                res.insert(-1, (dict)(new_cur_dict))
+
+    return res
+
+
+# %%
+test = False
+if test:
+
+    params_list = {
+        "objective": ["regression"],
+        "metric": ["rmse"],
+        "num_leaves": [10, 30, 50],
+        "min_child_weight": [40, 50, 60],
+        "learning_rate": [0.01, 0.03, 0.05, 0.06],
+        "bagging_fraction": [0.6, 0.7, 0.8],
+        "feature_fraction": [0.6, 0.7, 0.8],
+        "bagging_frequency": [4, 5, 6],
+        "bagging_seed": [2018],
+        "verbosity": [-1]
+    }
+
+    res = deque([{}])
+    for key in params_list:
+        value_list = params_list[key]
+        l = len(res)
+        for i in range(l):
+            cur_dict = res.popleft()
+            for value in value_list:
+                new_cur_dict = copy.deepcopy(cur_dict)
+                new_cur_dict[key] = value
+                res.insert(-1, (dict)(new_cur_dict))
+    print(res)

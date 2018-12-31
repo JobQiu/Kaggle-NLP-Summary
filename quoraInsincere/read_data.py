@@ -16,23 +16,32 @@ import numpy as np
 import gc
 import json
 import pickle
+from tqdm import tqdm
 
 
 class DataSet:
 
-    def __init__(self, embedding='glove', voc_len = 95000, max_ques_len = 60, cache = False ):
+    def __init__(self, embedding='glove', voc_len = 95000, max_ques_len = 60, cache = True ):
         """
 
         :param embedding:
         """
         self.config = load_config()
+        self.embedding_type = embedding
+        self.voc_len = voc_len
+        self.max_ques_len = max_ques_len
 
-        if cache and os.path.exists(os.path.join(self.config["data_dir"], "train_cache.csv")) and  os.path.exists(os.path.join(self.config["data_dir"], "test_cache.csv")):
 
-            print("Loading Train df")
-            self.train_df = pd.read_csv(os.path.join(self.config["data_dir"], "train_cache.csv"))
-            print("Loading Test df")
-            self.test_df = pd.read_csv(os.path.join(self.config["data_dir"], "test_cache.csv"))
+        if cache and os.path.exists(os.path.join(self.config["data_dir"], "y_train.pickle")):
+
+            with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'rb') as handle:
+                self.x_train = pickle.load(handle)
+            with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'rb') as handle:
+                self.x_test = pickle.load(handle)
+            with open(os.path.join(self.config["data_dir"], "y_train.pickle"), 'rb') as handle:
+                self.y_train = pickle.load(handle)
+            with open(os.path.join(self.config["data_dir"], "embedding_matrix.pickle"), 'rb') as handle:
+                self.embedding_matrix = pickle.load(handle)
 
             return
 
@@ -41,15 +50,12 @@ class DataSet:
         self.train_df = pd.read_csv(os.path.join(self.config["data_dir"], "train.csv"))
         print("Loading Test df")
         self.test_df = pd.read_csv(os.path.join(self.config["data_dir"], "test.csv"))
-        self.embedding_type = embedding
         print("Loading Embedding - {}".format(embedding))
         self.embedding_index = load_embedding(self.embedding_type)
 
         self.preprocess("train")
         self.preprocess("test")
 
-        self.voc_len = voc_len
-        self.max_ques_len = max_ques_len
 
         self.word_index = None
         # convert question_text to question_ids_list
@@ -62,10 +68,16 @@ class DataSet:
         gc.collect()
 
         if cache:
-            self.train_df.to_csv(os.path.join(self.config["data_dir"], "train_cache.csv"))
-            self.test_df.to_csv(os.path.join(self.config["data_dir"], "test_cache.csv"))
 
-        pass
+            with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'wb') as handle:
+                pickle.dump(self.x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'wb') as handle:
+                pickle.dump(self.x_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            with open(os.path.join(self.config["data_dir"], "y_train.pickle"), 'wb') as handle:
+                pickle.dump(self.y_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            with open(os.path.join(self.config["data_dir"], "embedding_matrix.pickle"), 'wb') as handle:
+                pickle.dump(self.embedding_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
     def make_embed_matrix(self, embeddings_index, word_index, len_voc):
         all_embs = np.stack(embeddings_index.values())
@@ -74,7 +86,7 @@ class DataSet:
         word_index = word_index
         embedding_matrix = np.random.normal(emb_mean, emb_std, (len_voc, embed_size))
 
-        for word, i in word_index.items():
+        for word, i in tqdm(word_index.items()):
             if i >= len_voc:
                 continue
             embedding_vector = embeddings_index.get(word)
@@ -85,14 +97,30 @@ class DataSet:
 
     def word2indices(self):
 
-        t = Tokenizer(num_words=self.voc_len)
-        t.fit_on_texts(self.train_df['treated_question'])
+        t = Tokenizer(num_words=self.voc_len,filters='')
+
+        x_train = self.train_df["treated_question"].fillna("_na_").values
+        x_test = self.test_df["treated_question"].fillna("_na_").values
+
+
+        t.fit_on_texts(list(x_train))
+
         self.word_index = t.word_index
 
-        for dataset in [self.train_df, self.test_df]:
-            dataset['question_ids'] = t.texts_to_sequences(dataset['treated_question'])
-            dataset['question_ids'] = pad_sequences(dataset['question_ids'], maxlen=self.max_len)
+        # Tokenize the sentences
+        x_train = t.texts_to_sequences(x_train)
+        x_test = t.texts_to_sequences(x_test)
 
+        # Pad the sentences
+        x_train = pad_sequences(x_train, maxlen=self.max_ques_len)
+        x_test = pad_sequences(x_test, maxlen=self.max_ques_len)
+
+        # Get the target values
+        y_train = self.train_df['target'].values
+
+        self.x_train =x_train
+        self.x_test =x_test
+        self.y_train =y_train
 
     def getTrain(self):
         return self.train_df
@@ -138,13 +166,14 @@ class DataSet:
             df['treated_question'] = df['treated_question'].apply(lambda x: deal_with_misspell(x))
 
 
-        vocab = count(df['question_text'])
+        vocab = count(df['treated_question'])
 
         print("Calculating coverage ... ")
         oov = check_coverage(vocab, self.embedding_index)
         print(oov[:20])
 
         print("-" * 20)
+        del oov
+        del vocab
+        gc.collect()
         send_msg("Load Done")
-
-    def compress_embedding(self ):

@@ -94,7 +94,7 @@ misspell_mapping = {'colour': 'color', 'centre': 'center', 'favourite': 'favorit
                 'airhostess': 'air hostess', "whst": 'what', 'watsapp': 'whatsapp', 'demonitisation': 'demonetization',
                 'demonitization': 'demonetization', 'demonetisation': 'demonetization', 'pokémon': 'Pokemon', 'Pokémon':'Pokemon',
                 'Quorans':'Quora users','cryptocurrencies':'cryptocurrency','Blockchain':'blockchain','fiancé':'fiance','wwwyoutubecom':'youtube',
-                'Cryptocurrency':'cryptocurrency','Quoras':'Quora','Golang':'golang','Whst':'What','coinbase':'Coinbase'}
+                'Cryptocurrency':'cryptocurrency','Quoras':'Quora','Golang':'golang','Whst':'What','coinbase':'Coinbase', 'tensorflow':'TensorFlow'}
 
 
 def deal_with_contraction(text):
