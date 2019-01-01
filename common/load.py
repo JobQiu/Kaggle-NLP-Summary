@@ -12,7 +12,7 @@ import numpy as np
 import gc
 
 
-def load_embedding(type, word_index=None):
+def load_embedding(type, word_index=None, voc_len=105000):
     """
 
     :param type:

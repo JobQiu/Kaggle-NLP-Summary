@@ -55,7 +55,7 @@ class DataSet:
 
         print("Loading Embedding - {}".format(embedding))
 
-        self.embedding_index = load_embedding(self.embedding_type, word_index=self.word_index)
+        self.embedding_index = load_embedding(self.embedding_type, word_index=self.word_index, voc_len = self.voc_len)
         if self.embedding_type != "mix":
             self.embedding_matrix = self.make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
         else:
@@ -66,15 +66,15 @@ class DataSet:
         send_msg("Load Done")
         gc.collect()
 
-        if cache:
-            with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'wb') as handle:
-                pickle.dump(self.x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
-            with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'wb') as handle:
-                pickle.dump(self.x_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
-            with open(os.path.join(self.config["data_dir"], "y_train.pickle"), 'wb') as handle:
-                pickle.dump(self.y_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
-            with open(os.path.join(self.config["data_dir"], "embedding_matrix.pickle"), 'wb') as handle:
-                pickle.dump(self.embedding_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+        with open(os.path.join(self.config["data_dir"], "x_train.pickle"), 'wb') as handle:
+            pickle.dump(self.x_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(os.path.join(self.config["data_dir"], "x_test.pickle"), 'wb') as handle:
+            pickle.dump(self.x_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(os.path.join(self.config["data_dir"], "y_train.pickle"), 'wb') as handle:
+            pickle.dump(self.y_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(os.path.join(self.config["data_dir"], "embedding_matrix.pickle"), 'wb') as handle:
+            pickle.dump(self.embedding_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def make_embed_matrix(self, embeddings_index, word_index, len_voc):
         all_embs = np.stack(embeddings_index.values())
