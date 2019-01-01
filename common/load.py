@@ -13,6 +13,12 @@ import gc
 
 
 def load_embedding(type, word_index=None):
+    """
+
+    :param type:
+    :param word_index:
+    :return:
+    """
     if type == "mix":
         config = load_config()
         embedding_matrix_1 = load_glove(word_index, config)

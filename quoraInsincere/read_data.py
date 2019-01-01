@@ -20,7 +20,7 @@ from tqdm import tqdm
 
 class DataSet:
 
-    def __init__(self, embedding='mix', voc_len=105000, max_ques_len=72, cache=True):
+    def __init__(self, embedding='glove', voc_len=105000, max_ques_len=72, cache=True):
         """
 
         :param embedding:
@@ -47,6 +47,8 @@ class DataSet:
         print("Loading Test df")
         self.test_df = pd.read_csv(os.path.join(self.config["data_dir"], "test.csv"))
 
+        self.preprocess("train")
+        self.preprocess("test")
         self.word_index = None
         # convert question_text to question_ids_list
         self.word2indices()
@@ -54,14 +56,14 @@ class DataSet:
         print("Loading Embedding - {}".format(embedding))
 
         self.embedding_index = load_embedding(self.embedding_type, word_index=self.word_index)
-
-        self.preprocess("train")
-        self.preprocess("test")
-
-        self.embedding_matrix = self.make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
+        if self.embedding_type != "mix":
+            self.embedding_matrix = self.make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
+        else:
+            self.embedding_matrix = self.embedding_index
 
         del self.word_index
         del self.embedding_index
+        send_msg("Load Done")
         gc.collect()
 
         if cache:
@@ -116,15 +118,6 @@ class DataSet:
         self.x_test = x_test
         self.y_train = y_train
 
-    def getTrain(self):
-        return self.train_df
-
-    def getTest(self):
-        return self.test_df
-
-    def getEmbeddingMatrix(self):
-        return self.embedding_matrix
-
     def preprocess(self, data_set, filters=["punct", "contraction", "special characters", "misspell"]):
         """
 
@@ -159,15 +152,3 @@ class DataSet:
         if "misspell" in filters:
             print("Clean misspell ing ...")
             df['treated_question'] = df['treated_question'].apply(lambda x: deal_with_misspell(x))
-
-        vocab = count(df['treated_question'])
-
-        print("Calculating coverage ... ")
-        oov = check_coverage(vocab, self.embedding_index)
-        print(oov[:20])
-
-        print("-" * 20)
-        del oov
-        del vocab
-        gc.collect()
-        send_msg("Load Done")

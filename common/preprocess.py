@@ -12,11 +12,6 @@ import re
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
-
-def clean():
-    pass
-
-
 def getWordIndices(X, len_voc, max_len):
     t = Tokenizer(num_words=len_voc)
     t.fit_on_texts(X)
