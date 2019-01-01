@@ -20,7 +20,7 @@ from tqdm import tqdm
 
 class DataSet:
 
-    def __init__(self, embedding='glove', voc_len=105000, max_ques_len=72, cache=True):
+    def __init__(self, embedding='mix', voc_len=105000, max_ques_len=72, cache=True):
         """
 
         :param embedding:
@@ -46,15 +46,17 @@ class DataSet:
         self.train_df = pd.read_csv(os.path.join(self.config["data_dir"], "train.csv"))
         print("Loading Test df")
         self.test_df = pd.read_csv(os.path.join(self.config["data_dir"], "test.csv"))
-        print("Loading Embedding - {}".format(embedding))
-        self.embedding_index = load_embedding(self.embedding_type)
-
-        self.preprocess("train")
-        self.preprocess("test")
 
         self.word_index = None
         # convert question_text to question_ids_list
         self.word2indices()
+
+        print("Loading Embedding - {}".format(embedding))
+
+        self.embedding_index = load_embedding(self.embedding_type, word_index=self.word_index)
+
+        self.preprocess("train")
+        self.preprocess("test")
 
         self.embedding_matrix = self.make_embed_matrix(self.embedding_index, self.word_index, self.voc_len)
 

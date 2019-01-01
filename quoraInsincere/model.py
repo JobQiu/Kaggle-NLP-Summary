@@ -55,6 +55,11 @@ def f1(y_true, y_pred):
 
 class BaseModel:
 
+    pass
+
+
+class CNNModel:
+
     def __init__(self,
                  data_set,
                  embed_size=300,
