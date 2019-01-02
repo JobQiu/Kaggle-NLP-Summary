@@ -93,7 +93,7 @@ class CuDNNModel(BaseModel):
 
     def build_model(self):
         inp = Input(shape=(self.max_ques_len,))
-        x = Embedding(self.data_set.voc_len, self.embed_size, weights=[self.embedding_matrix], trainable=True)(inp)
+        x = Embedding(max(self.data_set.voc_len, len(self.embedding_matrix)), self.embed_size, weights=[self.embedding_matrix], trainable=True)(inp)
         x = Bidirectional(CuDNNGRU(128, return_sequences=True))(x)
         x = Bidirectional(CuDNNGRU(64, return_sequences=True))(x)
         avg_pl = GlobalAveragePooling1D()(x)
@@ -121,16 +121,16 @@ class CuDNNModel(BaseModel):
             filepath = self.getWeightFileName()
             checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=2, save_best_only=True, mode='min')
             reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.6, patience=1, min_lr=0.0001, verbose=2)
-            earlystopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=2, verbose=2, mode='auto')
+            # earlystopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=2, verbose=2, mode='auto')
             callbacks = [checkpoint, reduce_lr]
             model = self.model
             if i == 0: print(model.summary())
-            model.fit(X_train, Y_train, batch_size=512, epochs=6, validation_data=(X_val, Y_val), verbose=2,
+            model.fit(X_train, Y_train, batch_size=batch_size, epochs=epoch, validation_data=(X_val, Y_val), verbose=2,
                       callbacks=callbacks,
                       )
             model.load_weights(filepath)
-            y_pred = model.predict([X_val], batch_size=1024, verbose=2)
-            y_test += np.squeeze(model.predict([X_test], batch_size=1024, verbose=2)) / 5
+            y_pred = model.predict([X_val], batch_size=batch_size, verbose=2)
+            y_test += np.squeeze(model.predict([X_test], batch_size=batch_size, verbose=2)) / 5
             f1, threshold = f1_smart(np.squeeze(Y_val), np.squeeze(y_pred))
             print('Optimal F1: {:.4f} at threshold: {:.4f}'.format(f1, threshold))
             self.bestscore.append(threshold)

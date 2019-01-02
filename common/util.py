@@ -9,6 +9,7 @@ Created on Thu Dec 27 00:35:54 2018
 import requests
 import json
 import os
+import copy
 
 
 def load_hyperparameters():
@@ -91,6 +92,7 @@ def map_list_combination(params_list):
 # %%
 test = False
 if test:
+    from collections import deque
 
     params_list = {
         "objective": ["regression"],
