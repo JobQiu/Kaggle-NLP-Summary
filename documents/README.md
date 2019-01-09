@@ -27,3 +27,9 @@ When these relationships are built into internal representation of data, it beco
 ## 2. CapsNet
 
 https://www.youtube.com/watch?v=pPN8d0E3900
+
+
+recommend system
+
+1. the item itself, like some product, songs
+2. 

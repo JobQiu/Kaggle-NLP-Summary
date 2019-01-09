@@ -5,6 +5,14 @@ Try to explore NLP competitions on Kaggle and generalize a pipeline to solve som
 
 ## Quora Insincere questions classification
 
+```
+!rm -rf /content/Kaggle-NLP-Summary
+!git clone https://github.com/JobQiu/Kaggle-NLP-Summary.git
+import os
+os.chdir('/content/Kaggle-NLP-Summary')
+!quoraInsincere/download.sh
+```
+
 https://www.kaggle.com/c/quora-insincere-questions-classification
 
 From Dec 26, 2018 11:17 PM
@@ -33,4 +41,4 @@ Dec 29, 2018
 
 ## Different models
 
-1. 
+1.
